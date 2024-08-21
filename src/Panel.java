@@ -2,8 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Random;
 
-public class Panel extends JPanel implements MouseListener, Runnable {
+public class Panel extends JPanel implements MouseListener {
     private JButton neue;
     private JButton bubble;
     private JButton select;
@@ -50,7 +53,7 @@ public class Panel extends JPanel implements MouseListener, Runnable {
         select.setText("Selection");
         radix.setText("Radix");
         quick.setText("Quick");
-        f.setText("N/A");
+        f.setText("Insertion");
         neue.addMouseListener(this);
         bubble.addMouseListener(this);
         select.addMouseListener(this);
@@ -69,10 +72,15 @@ public class Panel extends JPanel implements MouseListener, Runnable {
 
     }
 
+    private int[] heatmap;
+
     private int[] Randomize(int n) {
+        heatmap = new int[n];
+        Random r = new Random();
         int[] datne = new int[n];
         for (int i = 0; i < n; i++) {
-            datne[i] = (int) (300 * Math.random());
+            datne[i] = r.nextInt(300);
+            heatmap[i] = 0;
         }
         return datne;
 
@@ -88,14 +96,13 @@ public class Panel extends JPanel implements MouseListener, Runnable {
             daten = Randomize(daten.length);
 
 
-        }
-        else if (source.equals(bubble)) {
+        } else if (source.equals(bubble)) {
             if (timer.isSelected()) {
                 double start = System.currentTimeMillis();
                 for (int i = 0; i < 1000; i++) {
                     daten = Randomize(daten.length);
                     while (!isSorted(daten)) {
-                        Bubble.step(daten);
+                        Bubble.step(heatmap, daten);
                     }
                 }
 
@@ -105,15 +112,16 @@ public class Panel extends JPanel implements MouseListener, Runnable {
             while (!isSorted(daten)) {
                 paintImmediately(0, 0, 500, 500);
                 try {
+
                     Thread.sleep(3000 / daten.length);
                 } catch (InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
-                Bubble.step(daten);
+                Bubble.step(heatmap,daten);
             }
+            System.out.println();
 
-        }
-        else if (source.equals(select)) {
+        } else if (source.equals(select)) {
             Selection selection = new Selection();
             if (timer.isSelected()) {
                 double start = System.currentTimeMillis();
@@ -121,7 +129,7 @@ public class Panel extends JPanel implements MouseListener, Runnable {
                     daten = Randomize(daten.length);
                     selection = new Selection();
                     while (!isSorted(daten)) {
-                        selection.step(daten);
+                        selection.step(heatmap, daten);
                     }
                 }
 
@@ -136,10 +144,9 @@ public class Panel extends JPanel implements MouseListener, Runnable {
                     throw new RuntimeException(ex);
                 }
 
-                selection.step(daten);
+                selection.step(heatmap, daten);
             }
-        }
-        else if (source.equals(radix)) {
+        } else if (source.equals(radix)) {
             Radix r = new Radix();
 
             if (timer.isSelected()) {
@@ -166,8 +173,7 @@ public class Panel extends JPanel implements MouseListener, Runnable {
 
             }
 
-        }
-        else if (source.equals(quick)) {
+        } else if (source.equals(quick)) {
 
             if (timer.isSelected()) {
                 double start = System.currentTimeMillis();
@@ -193,17 +199,31 @@ public class Panel extends JPanel implements MouseListener, Runnable {
 
             }
 
-        }
-        else if (source.equals(f)) {
+        } else if (source.equals(f)) {
 
+            Insetion n = new Insetion();
+            if (timer.isSelected()) {
+                double start = System.currentTimeMillis();
+                for (int i = 0; i < 1000; i++) {
+                    n=new Insetion();
+                    daten = Randomize(daten.length);
+
+                    while (!isSorted(daten)) {
+                        n.step(heatmap,daten);
+                    }
+                }
+
+                time.setText(System.currentTimeMillis() - start + "ns");
+
+            }
             while (!isSorted(daten)) {
                 paintImmediately(0, 0, 500, 500);
                 try {
-                    Thread.sleep(300000 / daten.length);
+                    Thread.sleep(3000 / daten.length);
                 } catch (InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
-
+                n.step(heatmap,daten);
 
             }
         }
@@ -218,12 +238,17 @@ public class Panel extends JPanel implements MouseListener, Runnable {
         }
         return true;
     }
-
+    private static double sigmoid(int x)
+    {
+        return  ((1 / (1 + Math.exp((double) -x /30))));
+    }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.clearRect(0, 0, 300, 300);
         for (int i = 0; i < daten.length; i++) {
-            g.fillRect((300 / daten.length) * i, 0, (300 / daten.length), daten[i]);
+
+            g.setColor(new Color((int) (255-255*sigmoid(0)), (int) (255-(255*sigmoid(heatmap[i]))), (int) (255-(255*sigmoid(heatmap[i])))));
+            g.fillRect(300 - (300 / daten.length) * i, 400 - daten[i], (300 / daten.length), daten[i]);
         }
 
     }
@@ -248,15 +273,5 @@ public class Panel extends JPanel implements MouseListener, Runnable {
 //Ignored
     }
 
-    @Override
-    public void run() {
-        while (true) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            repaint();
-        }
-    }
+
 }

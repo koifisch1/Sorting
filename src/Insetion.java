@@ -1,18 +1,17 @@
 public class Insetion {
-    private int i = 0;
+    private int i = 1;
 
-    public void step(int[] daten) {
-        int min = Integer.MAX_VALUE;
-        int index = 0;
-        for (int j = i; j < daten.length; j++) {
-            if (daten[j] <min) {
-                min = daten[j];
-                index = j;
-            }
-
+    public void step(int []heatmap, int[] daten) {
+        int key = daten[i];
+        int hkey=heatmap[i];
+        int j = i - 1;
+        while (j >= 0 && daten[j] > key) {
+            daten[j + 1] = daten[j];
+            heatmap[j+1]=++heatmap[j];
+            j = j - 1;
         }
-        daten[index] = daten[i];
-        daten[i] = min;
+        daten[j + 1] = key;
+        heatmap[j+1]=++hkey ;
         i++;
     }
 }
