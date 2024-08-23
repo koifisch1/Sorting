@@ -106,7 +106,7 @@ public class Panel extends JPanel implements MouseListener {
                     }
                 }
 
-                time.setText(System.currentTimeMillis() - start + "ns");
+                time.setText(System.currentTimeMillis() - start + "µs");
 
             }
             while (!isSorted(daten)) {
@@ -117,7 +117,7 @@ public class Panel extends JPanel implements MouseListener {
                 } catch (InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
-                Bubble.step(heatmap,daten);
+                Bubble.step(heatmap, daten);
             }
             System.out.println();
 
@@ -133,7 +133,7 @@ public class Panel extends JPanel implements MouseListener {
                     }
                 }
 
-                time.setText(System.currentTimeMillis() - start + "ns");
+                time.setText(System.currentTimeMillis() - start + "µs");
 
             }
             while (!isSorted(daten)) {
@@ -159,7 +159,7 @@ public class Panel extends JPanel implements MouseListener {
                     }
                 }
 
-                time.setText(System.currentTimeMillis() - start + "ns");
+                time.setText(System.currentTimeMillis() - start + "µs");
 
             }
             while (!isSorted(daten)) {
@@ -185,7 +185,7 @@ public class Panel extends JPanel implements MouseListener {
                     }
                 }
 
-                time.setText(System.currentTimeMillis() - start + "ns");
+                time.setText(System.currentTimeMillis() - start + "µs");
 
             }
             while (!isSorted(daten)) {
@@ -205,15 +205,15 @@ public class Panel extends JPanel implements MouseListener {
             if (timer.isSelected()) {
                 double start = System.currentTimeMillis();
                 for (int i = 0; i < 1000; i++) {
-                    n=new Insetion();
+                    n = new Insetion();
                     daten = Randomize(daten.length);
 
                     while (!isSorted(daten)) {
-                        n.step(heatmap,daten);
+                        n.step(heatmap, daten);
                     }
                 }
 
-                time.setText(System.currentTimeMillis() - start + "ns");
+                time.setText(System.currentTimeMillis() - start + "µs");
 
             }
             while (!isSorted(daten)) {
@@ -223,7 +223,7 @@ public class Panel extends JPanel implements MouseListener {
                 } catch (InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
-                n.step(heatmap,daten);
+                n.step(heatmap, daten);
 
             }
         }
@@ -238,16 +238,17 @@ public class Panel extends JPanel implements MouseListener {
         }
         return true;
     }
-    private static double sigmoid(int x)
-    {
-        return  ((1 / (1 + Math.exp((double) -x /30))));
+
+    private static double sigmoid(int x) {
+        return ((1 / (1 + Math.exp((double) -x / 30))));
     }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.clearRect(0, 0, 300, 300);
         for (int i = 0; i < daten.length; i++) {
 
-            g.setColor(new Color((int) (255-255*sigmoid(0)), (int) (255-(255*sigmoid(heatmap[i]))), (int) (255-(255*sigmoid(heatmap[i])))));
+            g.setColor(new Color((int) (255 - 255 * sigmoid(0)), (int) (255 - (255 * sigmoid(heatmap[i]))), (int) (255 - (255 * sigmoid(heatmap[i])))));
             g.fillRect(300 - (300 / daten.length) * i, 400 - daten[i], (300 / daten.length), daten[i]);
         }
 

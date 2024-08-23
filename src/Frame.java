@@ -1,19 +1,47 @@
 import javax.swing.*;
-import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Frame extends JFrame {
+public class Frame extends JFrame implements ActionListener {
     Panel p = new Panel();
 
     public Frame() {
         this.setTitle("Sortierungen");
         this.setSize(500, 500);
         this.setDefaultCloseOperation(3);
+        p.setLocation(0, 20);
         this.add(p);
         this.setLayout(null);
         this.setVisible(true);
-this.setResizable(false);
-this.setLocationRelativeTo(null);
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
+        JButton a = new JButton();
+        a.setLocation(0, 0);
+        a.setSize(30, 30);
+        a.setText("asd");
+        a.setVisible(true);
+        this.add(a);
+        a.addActionListener(this);
+
     }
 
+    private void createComparePanels() {
+        ComparePanel compare = new ComparePanel();
+        this.add(compare);
+    }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (p.isVisible()) {
+            p.setVisible(false);
+            this.setSize(1000, 500);
+            this.setLocationRelativeTo(null);
+            createComparePanels();
+        } else {
+            p.setVisible(true);
+            this.setSize(500, 500);
+            this.setLocationRelativeTo(null);
+
+        }
+    }
 }
