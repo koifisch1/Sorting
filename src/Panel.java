@@ -2,8 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Random;
 
 public class Panel extends JPanel implements MouseListener {
@@ -12,7 +10,7 @@ public class Panel extends JPanel implements MouseListener {
     private JButton select;
     private JButton radix;
     private JButton quick;
-    private JButton f;
+    private JButton insertion;
     private JToggleButton timer;
     private JLabel time;
     int[] daten = new int[300];
@@ -28,7 +26,7 @@ public class Panel extends JPanel implements MouseListener {
         select = new JButton();
         radix = new JButton();
         quick = new JButton();
-        f = new JButton();
+        insertion = new JButton();
         timer = new JToggleButton();
         timer.setText("Timer?");
         timer.setLocation(350, 370);
@@ -38,13 +36,13 @@ public class Panel extends JPanel implements MouseListener {
         select.setLocation(350, 150);
         radix.setLocation(350, 200);
         quick.setLocation(350, 250);
-        f.setLocation(350, 300);
+        insertion.setLocation(350, 300);
         neue.setSize(100, 50);
         bubble.setSize(100, 50);
         select.setSize(100, 50);
         radix.setSize(100, 50);
         quick.setSize(100, 50);
-        f.setSize(100, 50);
+        insertion.setSize(100, 50);
         timer.setSize(100, 50);
         time.setSize(300, 30);
         time.setLocation(350, 10);
@@ -53,22 +51,23 @@ public class Panel extends JPanel implements MouseListener {
         select.setText("Selection");
         radix.setText("Radix");
         quick.setText("Quick");
-        f.setText("Insertion");
+        insertion.setText("Insertion");
         neue.addMouseListener(this);
         bubble.addMouseListener(this);
         select.addMouseListener(this);
         radix.addMouseListener(this);
         quick.addMouseListener(this);
-        f.addMouseListener(this);
+        insertion.addMouseListener(this);
         this.add(neue);
         this.add(bubble);
         this.add(select);
         this.add(radix);
         this.add(quick);
-        this.add(f);
+        this.add(insertion);
         this.add(timer);
         this.add(time);
         this.setVisible(true);
+
 
     }
 
@@ -199,7 +198,7 @@ public class Panel extends JPanel implements MouseListener {
 
             }
 
-        } else if (source.equals(f)) {
+        } else if (source.equals(insertion)) {
 
             Insetion n = new Insetion();
             if (timer.isSelected()) {
@@ -239,7 +238,7 @@ public class Panel extends JPanel implements MouseListener {
         return true;
     }
 
-    private static double sigmoid(int x) {
+    public static double sigmoid(int x) {
         return ((1 / (1 + Math.exp((double) -x / 30))));
     }
 
