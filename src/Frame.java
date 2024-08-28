@@ -25,9 +25,17 @@ public class Frame extends JFrame implements ActionListener {
 
     }
 
+    private ComparePanel compare;
+
     private void createComparePanels() {
-        ComparePanel compare = new ComparePanel();
+        compare = new ComparePanel();
         this.add(compare);
+    }
+
+    private void removeComparepanels() {
+        compare.setVisible(false);
+        this.remove(compare);
+
     }
 
     @Override
@@ -38,6 +46,7 @@ public class Frame extends JFrame implements ActionListener {
             this.setLocationRelativeTo(null);
             createComparePanels();
         } else {
+removeComparepanels();
             p.setVisible(true);
             this.setSize(500, 500);
             this.setLocationRelativeTo(null);

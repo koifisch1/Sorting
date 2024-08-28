@@ -66,7 +66,8 @@ public class DrawPanel extends JPanel implements Runnable {
                 label.setText((int) ((System.nanoTime() - start) / 1000) + "µs");
             }
             while (!isSorted(daten)) {
-                repaint();                Toolkit.getDefaultToolkit().sync();
+                repaint();
+                Toolkit.getDefaultToolkit().sync();
                 try {
                     Thread.sleep(5000 / daten.length);
                 } catch (InterruptedException ex) {
@@ -87,9 +88,12 @@ public class DrawPanel extends JPanel implements Runnable {
                 label.setText((int) ((System.nanoTime() - start) / 1000) + "µs");
 
             }
+            repaint();
+            Toolkit.getDefaultToolkit().sync();
             while (!isSorted(daten)) {
                 selection.step(heatmap, daten);
-                repaint();                Toolkit.getDefaultToolkit().sync();
+                repaint();
+                Toolkit.getDefaultToolkit().sync();
                 try {
                     Thread.sleep(5000 / daten.length);
                 } catch (InterruptedException ex) {
@@ -111,7 +115,8 @@ public class DrawPanel extends JPanel implements Runnable {
             }
             while (!isSorted(daten)) {
                 r.step(daten);
-                repaint();                Toolkit.getDefaultToolkit().sync();
+                repaint();
+                Toolkit.getDefaultToolkit().sync();
                 try {
                     Thread.sleep(300000 / daten.length);
                 } catch (InterruptedException ex) {
@@ -122,19 +127,31 @@ public class DrawPanel extends JPanel implements Runnable {
 
             if (timer) {
                 double start = System.nanoTime();
+                Merge.dealy=false;
                 while (!isSorted(daten)) {
-                    Quick.step(daten);
+                    Merge.sort(daten, 0, daten.length - 1, heatmap);
                 }
                 label.setText((int) ((System.nanoTime() - start) / 1000) + "µs");
             }
             while (!isSorted(daten)) {
-                repaint();                Toolkit.getDefaultToolkit().sync();
-                try {
-                    Thread.sleep(5000 / daten.length);
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
+                Merge.dealy = true;
+                Merge.daten0 = daten;
+                Merge.heatmap0 = heatmap;
+                Thread t = new Thread(new Merge());
+                t.start();
+                while (!isSorted(Merge.daten0)) {
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    repaint();
+                    Toolkit.getDefaultToolkit().sync();
+
+
                 }
-                Quick.step(daten);
+                repaint();
+                Toolkit.getDefaultToolkit().sync();
             }
         } else if (source == 2) {
 
@@ -159,7 +176,8 @@ public class DrawPanel extends JPanel implements Runnable {
             }
         }
 
-        paintImmediately(0, 0, 300, 300);
+        repaint();
+        Toolkit.getDefaultToolkit().sync();
     }
 
     private boolean isSorted(int[] daten) {

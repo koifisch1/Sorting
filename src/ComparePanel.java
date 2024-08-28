@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
@@ -19,14 +18,14 @@ public class ComparePanel extends JPanel implements ActionListener {
         chooser1.addItem("Selection");
         chooser1.addItem("Insertion");
         chooser1.addItem("Radix");
-        chooser1.addItem("Quick");
+        chooser1.addItem("Merge");
         chooser1.setSize(100, 30);
         chooser2 = new JComboBox<>();
         chooser2.addItem("Bubble");
         chooser2.addItem("Selection");
         chooser2.addItem("Insertion");
         chooser2.addItem("Radix");
-        chooser2.addItem("Quick");
+        chooser2.addItem("Merge");
         chooser2.setSize(100, 30);
         JLabel time1 = new JLabel();
         JLabel time2 = new JLabel();
