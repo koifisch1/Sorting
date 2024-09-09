@@ -1,45 +1,46 @@
 import java.util.Arrays;
 
 public class Radix {
+    /**
+     * Implentiert den radix Sort algoritmus
+     */
 
+    private int iteration = 1;
 
-private int iteration=1;
-
-
+    /**
+     * i ist der aktuelle schritt
+     * Fuehrt einen schritt durch
+     *
+     * @param daten Die daten die zu sortieren sind
+     */
     public void step(int[] daten) {
 
         countSort(daten, iteration);
-        iteration*=10;
+        iteration *= 10;
 
     }
 
 
-    static int getMax(int[] daten) {
-        int max = Integer.MIN_VALUE;
-        for (int j : daten)
-            if (j > max)
-                max = j;
-        return max;
-    }
-
-    // A function to do counting sort of daten[] according to
-    // the digit represented by exp.
+    /**
+     * count sort für die sortierung innerhalb der einezelnen schritte
+     *
+     * @param daten Die daten die zu sortieren sind
+     * @param exp   der exponent anhand dessen gerade sortiert weden soll
+     */
     static void countSort(int daten[], int exp) {
-        int output[] = new int[daten.length]; // output array
+        int output[] = new int[daten.length];
         int i;
         int count[] = new int[10];
         Arrays.fill(count, 0);
 
-        // Store count of occurrences in count[]
         for (i = 0; i < daten.length; i++)
             count[(daten[i] / exp) % 10]++;
 
-        // Change count[i] so that count[i] now contains
-        // actual position of this digit in output[]
+
         for (i = 1; i < 10; i++)
             count[i] += count[i - 1];
 
-        // Build the output array
+
         for (i = daten.length - 1; i >= 0; i--) {
             output[count[(daten[i] / exp) % 10] - 1] = daten[i];
             count[(daten[i] / exp) % 10]--;
@@ -49,8 +50,6 @@ private int iteration=1;
         for (i = 0; i < daten.length; i++)
             daten[i] = output[i];
     }
-
-
 
 
 }

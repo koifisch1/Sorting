@@ -5,6 +5,9 @@ import java.awt.event.ActionListener;
 public class Frame extends JFrame implements ActionListener {
     Panel p = new Panel();
 
+    /**
+     * erstellt den Frame auf welchem alles zu sehen sein soll
+     */
     public Frame() {
         this.setTitle("Sortierungen");
         this.setSize(500, 500);
@@ -27,17 +30,27 @@ public class Frame extends JFrame implements ActionListener {
 
     private ComparePanel compare;
 
+    /**
+     * erstellt die panels welche die vergleiche durchführen
+     */
     private void createComparePanels() {
         compare = new ComparePanel();
         this.add(compare);
     }
 
+    /**
+     * entfernt diej vergleichs panels wieder
+     */
     private void removeComparepanels() {
         compare.setVisible(false);
         this.remove(compare);
 
     }
 
+    /**
+     * wechselt zwischen den ansichten
+     * @param e the event to be processed
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (p.isVisible()) {
@@ -46,7 +59,7 @@ public class Frame extends JFrame implements ActionListener {
             this.setLocationRelativeTo(null);
             createComparePanels();
         } else {
-removeComparepanels();
+            removeComparepanels();
             p.setVisible(true);
             this.setSize(500, 500);
             this.setLocationRelativeTo(null);

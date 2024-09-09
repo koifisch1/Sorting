@@ -3,12 +3,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+/**
+ * Panel zum vergleich der verschiedenen algorithmen
+ */
 public class ComparePanel extends JPanel implements ActionListener {
     DrawPanel panel1;
     DrawPanel panel2;
     JButton srtatButton;
     JComboBox chooser1, chooser2;
 
+    /**
+     * erstellt das panel und die elementre darauf
+     */
     public ComparePanel() {
         this.setSize(1000, 500);
         this.setLocation(0, 0);
@@ -47,7 +53,7 @@ public class ComparePanel extends JPanel implements ActionListener {
         srtatButton.setLocation(300, 400);
         srtatButton.setSize(400, 50);
         srtatButton.addActionListener(this);
-        JButton timer = new JButton("Timer?");
+        JCheckBox timer = new JCheckBox("Timer?");
         timer.addActionListener(this);
         this.add(chooser2);
         this.add(chooser1);
@@ -64,6 +70,11 @@ public class ComparePanel extends JPanel implements ActionListener {
         this.setVisible(true);
     }
 
+    /**
+     * erstellt neue zufällig daten
+     * @param n anzahlder daten die erstellt werden sollen
+     * @return Array integer mit zufälligen daten 0-300
+     */
     private int[] Randomize(int n) {
 
         Random r = new Random();
@@ -80,6 +91,10 @@ public class ComparePanel extends JPanel implements ActionListener {
     Thread t1 = new Thread(panel1);
     Thread t2 = new Thread(panel2);
 
+    /**
+     * wenn start gedückt wird startet das programm wenn timer gedrückt wird wird er an und aus geschalten
+     * @param e the event to be processed
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(srtatButton)) {
@@ -95,6 +110,7 @@ public class ComparePanel extends JPanel implements ActionListener {
             t2 = new Thread(panel2);
             t1.start();
             t2.start();
+
 
         } else {
             panel1.setTimer(!panel1.isTimer());

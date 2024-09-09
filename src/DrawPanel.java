@@ -27,6 +27,12 @@ public class DrawPanel extends JPanel implements Runnable {
         return timer;
     }
 
+    /**
+     * erstellt das panel mit koordinaten und dem Label
+     * @param x
+     * @param y
+     * @param label
+     */
     public DrawPanel(int x, int y, JLabel label) {
 
         this.setSize(300, 300);
@@ -38,6 +44,10 @@ public class DrawPanel extends JPanel implements Runnable {
 
     }
 
+    /**
+     * paint methode
+     * @param g the <code>Graphics</code> object to protect
+     */
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
@@ -53,6 +63,11 @@ public class DrawPanel extends JPanel implements Runnable {
 
     private int[] heatmap = new int[daten.length];
 
+    /**
+     * führt das tatsächliche sortiern aus (echt parallel)
+     * Änlich zu Panel.mouseclicked
+     * beherbergt das starten der verschiedenen algorithmen
+     */
     @Override
     public void run() {
 
@@ -180,6 +195,11 @@ public class DrawPanel extends JPanel implements Runnable {
         Toolkit.getDefaultToolkit().sync();
     }
 
+    /**
+     * püft ob eine gegebene liste sortiert ist
+     * @param daten  Die daten die zu sortieren sind
+     * @return ja oder nein
+     */
     private boolean isSorted(int[] daten) {
         for (int i = 1; i < daten.length; i++) {
             if (daten[i] < daten[i - 1]) return false;

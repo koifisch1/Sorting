@@ -1,16 +1,23 @@
 public class Merge implements Runnable {
-
+    /**
+     *
+     * @param daten  Die daten die zu sortieren sind
+     * @param leftindex index der Linken seite
+     * @param middelindex index der mitte
+     * @param rightindex rechter index
+     * @param heatmap
+     */
     static void merge(int[] daten, int leftindex, int middelindex, int rightindex, int heatmap[]) {
-        int n1 = middelindex - leftindex + 1;
-        int n2 = rightindex - middelindex;
+        int laenge1 = middelindex - leftindex + 1;
+        int laenge2 = rightindex - middelindex;
 
-        int[] left = new int[n1];
-        int[] right = new int[n2];
-        int[] hright = new int[n2];
-        int[] hleaft = new int[n1];
-        System.arraycopy(daten, leftindex, left, 0, n1);
-        System.arraycopy(heatmap, leftindex, hleaft, 0, n1);
-        for (int j = 0; j < n2; ++j) {
+        int[] left = new int[laenge1];
+        int[] right = new int[laenge2];
+        int[] hright = new int[laenge2];
+        int[] hleaft = new int[laenge1];
+        System.arraycopy(daten, leftindex, left, 0, laenge1);
+        System.arraycopy(heatmap, leftindex, hleaft, 0, laenge1);
+        for (int j = 0; j < laenge2; ++j) {
             right[j] = daten[middelindex + 1 + j];
             hright[j] = heatmap[middelindex + 1 + j];
 
@@ -19,7 +26,7 @@ public class Merge implements Runnable {
         int i = 0, j = 0;
 
         int k = leftindex;
-        while (i < n1 && j < n2) {
+        while (i < laenge1 && j < laenge2) {
             if (left[i] <= right[j]) {
                 daten[k] = left[i];
                 heatmap[k] = hleaft[i];
@@ -33,14 +40,14 @@ public class Merge implements Runnable {
             }
             k++;
         }
-        while (i < n1) {
+        while (i < laenge1) {
             daten[k] = left[i];
             heatmap[k] = hleaft[i];
             ++heatmap[k];
             i++;
             k++;
         }
-        while (j < n2) {
+        while (j < laenge2) {
             daten[k] = right[j];
             heatmap[k] = hright[j];
             ++heatmap[k];
@@ -49,6 +56,13 @@ public class Merge implements Runnable {
         }
     }
 
+    /**
+     * rekursive sortiefunktion mergesort
+     * @param daten  Die daten die zu sortieren sind
+     * @param leftindex index der Linken seite
+     * @param rightindex index der rechten seite
+     * @param heatmap
+     */
     static void sort(int[] daten, int leftindex, int rightindex, int[] heatmap) {
         if (leftindex < rightindex) {
 
@@ -73,6 +87,6 @@ public class Merge implements Runnable {
 
     @Override
     public void run() {
-        sort(daten0, 0, daten0.length - 1,heatmap0);
+        sort(daten0, 0, daten0.length - 1, heatmap0);
     }
 }

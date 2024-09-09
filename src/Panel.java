@@ -235,6 +235,11 @@ public class Panel extends JPanel implements MouseListener {
 
     }
 
+    /**
+     * Prüft ob eine liste NICHT sortiert ist
+     * @param daten  Die daten die zu sortieren sind
+     * @return true wenn nicht sortert sonst false
+     */
     private boolean notStorted(int[] daten) {
         for (int i = 1; i < daten.length; i++) {
             if (daten[i] < daten[i - 1]) return true;
@@ -243,6 +248,11 @@ public class Panel extends JPanel implements MouseListener {
         return false;
     }
 
+    /**
+     * modifizierte sigmoid funktion
+     * @param x eingabewert
+     * @return sigmod(x) <-- ist eine mathmathische funktion
+     */
     public static double sigmoid(int x) {
         return ((1 / (1 + Math.exp((double) -x / 30))));
     }
