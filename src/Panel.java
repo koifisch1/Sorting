@@ -1,10 +1,12 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Random;
 
-public class Panel extends JPanel implements MouseListener {
+public class Panel extends JPanel implements MouseListener, ChangeListener {
     private final JButton neue;
     private final JButton bubble;
     private final JButton select;
@@ -13,14 +15,15 @@ public class Panel extends JPanel implements MouseListener {
     private final JButton insertion;
     private final JToggleButton timer;
     private final JLabel time;
-    int[] daten = new int[300];
+    int[] daten;
+    private JComboBox wassortiern;
+    private final JSlider slider = new JSlider(0, 100);
 
     public Panel() {
         this.setSize(500, 500);
         this.validate();
         this.setLayout(null);
-
-        daten = Randomize(daten.length);
+        daten = randomize();
         neue = new JButton();
         bubble = new JButton();
         select = new JButton();
@@ -52,13 +55,24 @@ public class Panel extends JPanel implements MouseListener {
         radix.setText("Radix");
         merge.setText("Merge");
         insertion.setText("Insertion");
+        slider.setSize(300, 30);
+        slider.setLocation(0, 400);
+        wassortiern = new JComboBox();
+        wassortiern.addItem("Ovale");
+        wassortiern.addItem("Balken");
+        wassortiern.addItem("Striche nach richtungsvaktor");
+        wassortiern.setSize(100,20);
+        wassortiern.setLocation(350,0);
+        wassortiern.addMouseListener(this);
         neue.addMouseListener(this);
         bubble.addMouseListener(this);
         select.addMouseListener(this);
         radix.addMouseListener(this);
         merge.addMouseListener(this);
         insertion.addMouseListener(this);
+        slider.addChangeListener(this);
         this.add(neue);
+        this.add(wassortiern);
         this.add(bubble);
         this.add(select);
         this.add(radix);
@@ -66,6 +80,7 @@ public class Panel extends JPanel implements MouseListener {
         this.add(insertion);
         this.add(timer);
         this.add(time);
+        this.add(slider);
         this.setVisible(true);
 
 
@@ -73,7 +88,9 @@ public class Panel extends JPanel implements MouseListener {
 
     private int[] heatmap;
 
-    private int[] Randomize(int n) {
+    private int[] randomize() {
+        int n = slider.getValue() * 3;
+        if (n == 0) n = 2;
         heatmap = new int[n];
         Random r = new Random();
         int[] daten = new int[n];
@@ -82,8 +99,6 @@ public class Panel extends JPanel implements MouseListener {
             heatmap[i] = 0;
         }
         return daten;
-
-
     }
 
     @Override
@@ -92,14 +107,14 @@ public class Panel extends JPanel implements MouseListener {
         event.consume();
         repaint();
         if (source.equals(neue)) {
-            daten = Randomize(daten.length);
+            daten = randomize();
 
 
         } else if (source.equals(bubble)) {
             if (timer.isSelected()) {
                 double start = System.currentTimeMillis();
                 for (int i = 0; i < 1000; i++) {
-                    daten = Randomize(daten.length);
+                    daten = randomize();
                     while (notStorted(daten)) {
                         Bubble.step(heatmap, daten);
                     }
@@ -125,7 +140,7 @@ public class Panel extends JPanel implements MouseListener {
             if (timer.isSelected()) {
                 double start = System.currentTimeMillis();
                 for (int i = 0; i < 1000; i++) {
-                    daten = Randomize(daten.length);
+                    daten = randomize();
                     selection = new Selection();
                     while (notStorted(daten)) {
                         selection.step(heatmap, daten);
@@ -151,7 +166,7 @@ public class Panel extends JPanel implements MouseListener {
             if (timer.isSelected()) {
                 double start = System.currentTimeMillis();
                 for (int i = 0; i < 1000; i++) {
-                    daten = Randomize(daten.length);
+                    daten = randomize();
                     r = new Radix();
                     while (notStorted(daten)) {
                         r.step(daten);
@@ -164,7 +179,7 @@ public class Panel extends JPanel implements MouseListener {
             while (notStorted(daten)) {
                 paintImmediately(0, 0, 500, 500);
                 try {
-                    Thread.sleep(300000 / daten.length);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -177,9 +192,9 @@ public class Panel extends JPanel implements MouseListener {
             if (timer.isSelected()) {
                 double start = System.currentTimeMillis();
                 for (int i = 0; i < 1000; i++) {
-                    daten = Randomize(daten.length);
+                    daten = randomize();
                     Merge.dealy = false;
-                    Merge.sort(daten, 0, daten.length - 1,heatmap);
+                    Merge.sort(daten, 0, daten.length - 1, heatmap);
                     paintImmediately(0, 0, 500, 500);
                 }
 
@@ -210,7 +225,7 @@ public class Panel extends JPanel implements MouseListener {
                 double start = System.currentTimeMillis();
                 for (int i = 0; i < 1000; i++) {
                     n = new Insetion();
-                    daten = Randomize(daten.length);
+                    daten = randomize();
 
                     while (notStorted(daten)) {
                         n.step(heatmap, daten);
@@ -237,7 +252,8 @@ public class Panel extends JPanel implements MouseListener {
 
     /**
      * Prüft ob eine liste NICHT sortiert ist
-     * @param daten  Die daten die zu sortieren sind
+     *
+     * @param daten Die daten die zu sortieren sind
      * @return true wenn nicht sortert sonst false
      */
     private boolean notStorted(int[] daten) {
@@ -250,6 +266,7 @@ public class Panel extends JPanel implements MouseListener {
 
     /**
      * modifizierte sigmoid funktion
+     *
      * @param x eingabewert
      * @return sigmod(x) <-- ist eine mathmathische funktion
      */
@@ -260,11 +277,28 @@ public class Panel extends JPanel implements MouseListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.clearRect(0, 0, 300, 300);
-        for (int i = 0; i < daten.length; i++) {
+        if (wassortiern.getSelectedItem().equals("Ovale")){
+            for (int i = 0; i < daten.length; i++) {
 
-            g.setColor(new Color((int) (255 - 255 * sigmoid(0)), (int) (255 - (255 * sigmoid(heatmap[i]))), (int) (255 - (255 * sigmoid(heatmap[i])))));
-            g.fillRect(300 - (300 / daten.length) * i, 400 - daten[i], (300 / daten.length), daten[i]);
+                g.setColor(new Color((int) (255 - 255 * sigmoid(0)), (int) (255 - (255 * sigmoid(heatmap[i]))), (int) (255 - (255 * sigmoid(heatmap[i])))));
+                g.drawOval(300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)), 400 - daten[i], (300 / daten.length), daten[i]);
+            }
+
+        } else if (wassortiern.getSelectedItem().equals("Balken")) {
+            for (int i = 0; i < daten.length; i++) {
+
+                g.setColor(new Color((int) (255 - 255 * sigmoid(0)), (int) (255 - (255 * sigmoid(heatmap[i]))), (int) (255 - (255 * sigmoid(heatmap[i])))));
+                g.fillRect(300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)), 400 - daten[i], (300 / daten.length), daten[i]);
+            }
         }
+        else {
+            for (int i = 0; i < daten.length; i++) {
+
+                g.setColor(new Color((int) (255 - 255 * sigmoid(0)), (int) (255 - (255 * sigmoid(heatmap[i]))), (int) (255 - (255 * sigmoid(heatmap[i])))));
+                g.drawLine(300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)), 400 - daten[i], (300 / daten.length), daten[i]);
+            }
+        }
+
 
     }
 
@@ -275,12 +309,14 @@ public class Panel extends JPanel implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-//ignored
+
+//Ignored
+
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-//Ignored
+        //Ignored
     }
 
     @Override
@@ -289,4 +325,12 @@ public class Panel extends JPanel implements MouseListener {
     }
 
 
+    @Override
+    public void stateChanged(ChangeEvent e) {
+
+        daten = randomize();
+        paintImmediately(0, 0, 500, 500);
+
+
+    }
 }

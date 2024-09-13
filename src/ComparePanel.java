@@ -1,4 +1,7 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
@@ -6,11 +9,12 @@ import java.util.Random;
 /**
  * Panel zum vergleich der verschiedenen algorithmen
  */
-public class ComparePanel extends JPanel implements ActionListener {
+public class ComparePanel extends JPanel implements ActionListener, ChangeListener{
     DrawPanel panel1;
     DrawPanel panel2;
     JButton srtatButton;
     JComboBox chooser1, chooser2;
+    private final JSlider slider = new JSlider(0, 100);
 
     /**
      * erstellt das panel und die elementre darauf
@@ -41,17 +45,20 @@ public class ComparePanel extends JPanel implements ActionListener {
         time2.setLocation(900, 150);
         chooser1.setLocation(400, 100);
         chooser2.setLocation(900, 100);
-
+        slider.setSize(300, 30);
+        slider.setLocation(350, 400);
+        slider.addChangeListener(this);
         panel1 = new DrawPanel(300, 300, time1);
         panel2 = new DrawPanel(300, 300, time2);
         panel1.setLocation(100, 100);
         panel2.setLocation(600, 100);
         this.add(panel1);
         this.add(panel2);
+        this.add(slider);
         srtatButton = new JButton();
         srtatButton.setText("Start");
-        srtatButton.setLocation(300, 400);
-        srtatButton.setSize(400, 50);
+        srtatButton.setLocation(450, 250);
+        srtatButton.setSize(100, 50);
         srtatButton.addActionListener(this);
         JCheckBox timer = new JCheckBox("Timer?");
         timer.addActionListener(this);
@@ -61,7 +68,7 @@ public class ComparePanel extends JPanel implements ActionListener {
         this.add(time1);
         this.add(time2);
 
-        int[] zahlen = Randomize(300);
+        int[] zahlen = randomize();
         panel1.setDaten(zahlen.clone());
         panel2.setDaten(zahlen.clone());
         this.add(timer);
@@ -72,20 +79,21 @@ public class ComparePanel extends JPanel implements ActionListener {
 
     /**
      * erstellt neue zufällig daten
-     * @param n anzahlder daten die erstellt werden sollen
+     *
+     * slider gibt anhzahl der elemente an
      * @return Array integer mit zufälligen daten 0-300
      */
-    private int[] Randomize(int n) {
+    private int[] randomize() {
+        int n=slider.getValue()*3;
+        if (n==0)n=2;
 
         Random r = new Random();
-        int[] datne = new int[n];
+        int[] daten = new int[n];
         for (int i = 0; i < n; i++) {
-            datne[i] = r.nextInt(300);
+            daten[i] = r.nextInt(300);
 
         }
-        return datne;
-
-
+        return daten;
     }
 
     Thread t1 = new Thread(panel1);
@@ -93,6 +101,7 @@ public class ComparePanel extends JPanel implements ActionListener {
 
     /**
      * wenn start gedückt wird startet das programm wenn timer gedrückt wird wird er an und aus geschalten
+     *
      * @param e the event to be processed
      */
     @Override
@@ -101,7 +110,7 @@ public class ComparePanel extends JPanel implements ActionListener {
             panel1.setSource(chooser1.getSelectedIndex());
             panel2.setSource(chooser2.getSelectedIndex());
             if (t2.isAlive() || t1.isAlive()) return;
-            int[] zahlen = Randomize(300);
+            int[] zahlen = randomize();
             panel1.setDaten(zahlen.clone());
             panel2.setDaten(zahlen.clone());
             panel1.setHeatmap(new int[300]);
@@ -117,5 +126,19 @@ public class ComparePanel extends JPanel implements ActionListener {
             panel2.setTimer(!panel2.isTimer());
 
         }
+    }
+
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if (t1.isAlive()|| t2.isAlive())return;
+        int[] daten=randomize();
+        panel1.setHeatmap(new int[randomize().length]);
+        panel1.setDaten(daten.clone());
+        panel1.pain();
+        panel2.setHeatmap(new int[randomize().length]);
+
+        panel2.setDaten(daten.clone());
+        panel2.pain();
     }
 }

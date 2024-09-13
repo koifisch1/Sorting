@@ -43,7 +43,11 @@ public class DrawPanel extends JPanel implements Runnable {
 
 
     }
+public void pain(){
+    repaint();
+    Toolkit.getDefaultToolkit().sync();
 
+}
     /**
      * paint methode
      * @param g the <code>Graphics</code> object to protect
@@ -51,11 +55,15 @@ public class DrawPanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
+
         g.clearRect(0, 0, 300, 300);
+
         for (int i = 0; i < daten.length; i++) {
 
+
             g.setColor(new Color((int) (255 - 255 * Panel.sigmoid(0)), (int) (255 - (255 * Panel.sigmoid(heatmap[i]))), (int) (255 - (255 * Panel.sigmoid(heatmap[i])))));
-            g.fillRect(300 - (300 / daten.length) * i, 400 - daten[i], (300 / daten.length), daten[i]);
+            g.fillRect(300 - (int)(((double)(300) / (double) daten.length) * (double) (i+1)), 300 - daten[i], (300 / daten.length), daten[i]);
+
         }
 
     }
