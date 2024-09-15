@@ -2,6 +2,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Random;
@@ -32,7 +34,7 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
         insertion = new JButton();
         timer = new JToggleButton();
         timer.setText("Timer?");
-        timer.setLocation(350, 370);
+        timer.setLocation(350, 350);
         time = new JLabel();
         neue.setLocation(350, 50);
         bubble.setLocation(350, 100);
@@ -56,11 +58,11 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
         merge.setText("Merge");
         insertion.setText("Insertion");
         slider.setSize(300, 30);
-        slider.setLocation(0, 400);
+        slider.setLocation(0, 370);
         wassortiern = new JComboBox();
-        wassortiern.addItem("Ovale");
         wassortiern.addItem("Balken");
-        wassortiern.addItem("Striche nach richtungsvaktor");
+        wassortiern.addItem("Ovale");
+        wassortiern.addItem("Linien");
         wassortiern.setSize(100,20);
         wassortiern.setLocation(350,0);
         wassortiern.addMouseListener(this);
@@ -82,7 +84,11 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
         this.add(time);
         this.add(slider);
         this.setVisible(true);
-
+        wassortiern.addActionListener (new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                paintImmediately(0,0,500,500);
+            }
+        });
 
     }
 
@@ -233,6 +239,7 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
                 }
 
                 time.setText(System.currentTimeMillis() - start + "µs");
+                daten = randomize();
 
             }
             while (notStorted(daten)) {
@@ -281,21 +288,22 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
             for (int i = 0; i < daten.length; i++) {
 
                 g.setColor(new Color((int) (255 - 255 * sigmoid(0)), (int) (255 - (255 * sigmoid(heatmap[i]))), (int) (255 - (255 * sigmoid(heatmap[i])))));
-                g.drawOval(300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)), 400 - daten[i], (300 / daten.length), daten[i]);
+                g.drawOval(300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)), 350 - daten[i], (300 / daten.length), daten[i]);
             }
 
         } else if (wassortiern.getSelectedItem().equals("Balken")) {
             for (int i = 0; i < daten.length; i++) {
 
                 g.setColor(new Color((int) (255 - 255 * sigmoid(0)), (int) (255 - (255 * sigmoid(heatmap[i]))), (int) (255 - (255 * sigmoid(heatmap[i])))));
-                g.fillRect(300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)), 400 - daten[i], (300 / daten.length), daten[i]);
+                g.fillRect(300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)), 350 - daten[i], (300 / daten.length), daten[i]);
             }
         }
         else {
             for (int i = 0; i < daten.length; i++) {
 
                 g.setColor(new Color((int) (255 - 255 * sigmoid(0)), (int) (255 - (255 * sigmoid(heatmap[i]))), (int) (255 - (255 * sigmoid(heatmap[i])))));
-                g.drawLine(300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)), 400 - daten[i], (300 / daten.length), daten[i]);
+                g.drawLine(0,300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)),daten[i],300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)) );
+
             }
         }
 

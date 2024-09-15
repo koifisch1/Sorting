@@ -12,7 +12,7 @@ public class Frame extends JFrame implements ActionListener {
         this.setTitle("Sortierungen");
         this.setSize(500, 500);
         this.setDefaultCloseOperation(3);
-        p.setLocation(0, 20);
+        p.setLocation(10, 50);
         this.add(p);
         this.setLayout(null);
         this.setVisible(true);
