@@ -1,10 +1,9 @@
 public class Merge implements Runnable {
     /**
-     *
-     * @param daten  Die daten die zu sortieren sind
-     * @param leftindex index der Linken seite
+     * @param daten       Die daten die zu sortieren sind
+     * @param leftindex   index der Linken seite
      * @param middelindex index der mitte
-     * @param rightindex rechter index
+     * @param rightindex  rechter index
      * @param heatmap
      */
     static void merge(int[] daten, int leftindex, int middelindex, int rightindex, int heatmap[]) {
@@ -58,8 +57,9 @@ public class Merge implements Runnable {
 
     /**
      * rekursive sortiefunktion mergesort
-     * @param daten  Die daten die zu sortieren sind
-     * @param leftindex index der Linken seite
+     *
+     * @param daten      Die daten die zu sortieren sind
+     * @param leftindex  index der Linken seite
      * @param rightindex index der rechten seite
      * @param heatmap
      */

@@ -3,6 +3,7 @@ import java.util.Arrays;
 public class Radix {
     /**
      * Implentiert den radix Sort algoritmus
+     * Bitte nur Fuer Basis (9+1) Zahlen Benutzen
      */
 
     private int iteration = 1;

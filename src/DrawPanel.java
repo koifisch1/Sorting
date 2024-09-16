@@ -29,9 +29,10 @@ public class DrawPanel extends JPanel implements Runnable {
 
     /**
      * erstellt das panel mit koordinaten und dem Label
-     * @param x
-     * @param y
-     * @param label
+     *
+     * @param x     x koordinate
+     * @param y     ykoordinate
+     * @param label das Label zum Hinzufügen
      */
     public DrawPanel(int x, int y, JLabel label) {
 
@@ -43,13 +44,20 @@ public class DrawPanel extends JPanel implements Runnable {
 
 
     }
-public void pain(){
-    repaint();
-    Toolkit.getDefaultToolkit().sync();
 
-}
+    /**
+     * Malt den ganzen aal neu
+     * (Konnte ich nicht paint nennen weil es die schon gibt also hier pain)
+     */
+    public void pain() {
+        repaint();
+        Toolkit.getDefaultToolkit().sync();
+
+    }
+
     /**
      * paint methode
+     *
      * @param g the <code>Graphics</code> object to protect
      */
     public void paintComponent(Graphics g) {
@@ -62,7 +70,7 @@ public void pain(){
 
 
             g.setColor(new Color((int) (255 - 255 * Panel.sigmoid(0)), (int) (255 - (255 * Panel.sigmoid(heatmap[i]))), (int) (255 - (255 * Panel.sigmoid(heatmap[i])))));
-            g.fillRect(300 - (int)(((double)(300) / (double) daten.length) * (double) (i+1)), 300 - daten[i], (300 / daten.length), daten[i]);
+            g.fillRect(300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)), 300 - daten[i], (300 / daten.length), daten[i]);
 
         }
 
@@ -150,7 +158,7 @@ public void pain(){
 
             if (timer) {
                 double start = System.nanoTime();
-                Merge.dealy=false;
+                Merge.dealy = false;
                 while (!isSorted(daten)) {
                     Merge.sort(daten, 0, daten.length - 1, heatmap);
                 }
@@ -205,7 +213,8 @@ public void pain(){
 
     /**
      * püft ob eine gegebene liste sortiert ist
-     * @param daten  Die daten die zu sortieren sind
+     *
+     * @param daten Die daten die zu sortieren sind
      * @return ja oder nein
      */
     private boolean isSorted(int[] daten) {

@@ -21,6 +21,9 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
     private JComboBox wassortiern;
     private final JSlider slider = new JSlider(0, 100);
 
+    /**
+     * erstellt das Panel und alles was da drauf ist
+     */
     public Panel() {
         this.setSize(500, 500);
         this.validate();
@@ -63,8 +66,8 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
         wassortiern.addItem("Balken");
         wassortiern.addItem("Ovale");
         wassortiern.addItem("Linien");
-        wassortiern.setSize(100,20);
-        wassortiern.setLocation(350,0);
+        wassortiern.setSize(100, 20);
+        wassortiern.setLocation(350, 0);
         wassortiern.addMouseListener(this);
         neue.addMouseListener(this);
         bubble.addMouseListener(this);
@@ -84,9 +87,9 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
         this.add(time);
         this.add(slider);
         this.setVisible(true);
-        wassortiern.addActionListener (new ActionListener() {
+        wassortiern.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                paintImmediately(0,0,500,500);
+                paintImmediately(0, 0, 500, 500);
             }
         });
 
@@ -94,6 +97,11 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
 
     private int[] heatmap;
 
+    /**
+     * erstellt zufaellige werte anhand der auf dem slider eingestellten anzahl
+     *
+     * @return
+     */
     private int[] randomize() {
         int n = slider.getValue() * 3;
         if (n == 0) n = 2;
@@ -107,17 +115,24 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
         return daten;
     }
 
+    /**
+     * wenn ein Button gedrueckt wird kommt das hier raus
+     *
+     * @param event the event to be processed
+     */
     @Override
     public void mouseClicked(MouseEvent event) {
         Object source = event.getSource();
         event.consume();
         repaint();
+        //neu Malen
         if (source.equals(neue)) {
             daten = randomize();
 
-
+//Bubble Sort
         } else if (source.equals(bubble)) {
             if (timer.isSelected()) {
+                //Mit Timer
                 double start = System.currentTimeMillis();
                 for (int i = 0; i < 1000; i++) {
                     daten = randomize();
@@ -129,6 +144,7 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
                 time.setText(System.currentTimeMillis() - start + "µs");
 
             }
+            //Ohne Timer
             while (notStorted(daten)) {
                 paintImmediately(0, 0, 500, 500);
                 try {
@@ -140,10 +156,11 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
                 Bubble.step(heatmap, daten);
             }
             System.out.println();
-
+//Selection sort
         } else if (source.equals(select)) {
             Selection selection = new Selection();
             if (timer.isSelected()) {
+                //mit Timer
                 double start = System.currentTimeMillis();
                 for (int i = 0; i < 1000; i++) {
                     daten = randomize();
@@ -156,6 +173,7 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
                 time.setText(System.currentTimeMillis() - start + "µs");
 
             }
+            //Ohne Timer
             while (notStorted(daten)) {
                 paintImmediately(0, 0, 500, 500);
                 try {
@@ -166,9 +184,10 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
 
                 selection.step(heatmap, daten);
             }
+            //Radix sort
         } else if (source.equals(radix)) {
             Radix r = new Radix();
-
+//Mit Timer
             if (timer.isSelected()) {
                 double start = System.currentTimeMillis();
                 for (int i = 0; i < 1000; i++) {
@@ -182,6 +201,7 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
                 time.setText(System.currentTimeMillis() - start + "µs");
 
             }
+            //Ohne Timer
             while (notStorted(daten)) {
                 paintImmediately(0, 0, 500, 500);
                 try {
@@ -192,9 +212,9 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
                 r.step(daten);
 
             }
-
+//merge Sort
         } else if (source.equals(merge)) {
-
+//Mit Timer
             if (timer.isSelected()) {
                 double start = System.currentTimeMillis();
                 for (int i = 0; i < 1000; i++) {
@@ -208,6 +228,7 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
 
             }
             while (notStorted(daten)) {
+                //Ohne Timer
                 Merge.dealy = true;
                 Merge.daten0 = daten;
                 Merge.heatmap0 = heatmap;
@@ -223,11 +244,13 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
                 paintImmediately(0, 0, 500, 500);
 
             }
-
+//insertion Sort
         } else if (source.equals(insertion)) {
 
             Insetion n = new Insetion();
+
             if (timer.isSelected()) {
+                //Mit Timer
                 double start = System.currentTimeMillis();
                 for (int i = 0; i < 1000; i++) {
                     n = new Insetion();
@@ -242,6 +265,7 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
                 daten = randomize();
 
             }
+            //Ohne Timer
             while (notStorted(daten)) {
                 paintImmediately(0, 0, 500, 500);
                 try {
@@ -281,10 +305,15 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
         return ((1 / (1 + Math.exp((double) -x / 30))));
     }
 
+    /**
+     * Die Paint funktion die am ende alles malen soll
+     *
+     * @param g the <code>Graphics</code> object to protect
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.clearRect(0, 0, 300, 300);
-        if (wassortiern.getSelectedItem().equals("Ovale")){
+        if (wassortiern.getSelectedItem().equals("Ovale")) {
             for (int i = 0; i < daten.length; i++) {
 
                 g.setColor(new Color((int) (255 - 255 * sigmoid(0)), (int) (255 - (255 * sigmoid(heatmap[i]))), (int) (255 - (255 * sigmoid(heatmap[i])))));
@@ -297,12 +326,11 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
                 g.setColor(new Color((int) (255 - 255 * sigmoid(0)), (int) (255 - (255 * sigmoid(heatmap[i]))), (int) (255 - (255 * sigmoid(heatmap[i])))));
                 g.fillRect(300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)), 350 - daten[i], (300 / daten.length), daten[i]);
             }
-        }
-        else {
+        } else {
             for (int i = 0; i < daten.length; i++) {
 
                 g.setColor(new Color((int) (255 - 255 * sigmoid(0)), (int) (255 - (255 * sigmoid(heatmap[i]))), (int) (255 - (255 * sigmoid(heatmap[i])))));
-                g.drawLine(0,300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)),daten[i],300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)) );
+                g.drawLine(0, 300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)), daten[i], 300 - (int) (((double) (300) / (double) daten.length) * (double) (i + 1)));
 
             }
         }
@@ -332,7 +360,11 @@ public class Panel extends JPanel implements MouseListener, ChangeListener {
 //Ignored
     }
 
-
+    /**
+     * wenn sich was am slider aendert soll aktualisiert werden
+     *
+     * @param e a ChangeEvent object
+     */
     @Override
     public void stateChanged(ChangeEvent e) {
 

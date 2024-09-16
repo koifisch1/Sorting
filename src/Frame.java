@@ -49,6 +49,7 @@ public class Frame extends JFrame implements ActionListener {
 
     /**
      * wechselt zwischen den ansichten
+     *
      * @param e the event to be processed
      */
     @Override

@@ -9,7 +9,7 @@ import java.util.Random;
 /**
  * Panel zum vergleich der verschiedenen algorithmen
  */
-public class ComparePanel extends JPanel implements ActionListener, ChangeListener{
+public class ComparePanel extends JPanel implements ActionListener, ChangeListener {
     DrawPanel panel1;
     DrawPanel panel2;
     JButton srtatButton;
@@ -79,13 +79,14 @@ public class ComparePanel extends JPanel implements ActionListener, ChangeListen
 
     /**
      * erstellt neue zufällig daten
-     *
+     * <p>
      * slider gibt anhzahl der elemente an
+     *
      * @return Array integer mit zufälligen daten 0-300
      */
     private int[] randomize() {
-        int n=slider.getValue()*3;
-        if (n==0)n=2;
+        int n = slider.getValue() * 3;
+        if (n == 0) n = 2;
 
         Random r = new Random();
         int[] daten = new int[n];
@@ -128,11 +129,15 @@ public class ComparePanel extends JPanel implements ActionListener, ChangeListen
         }
     }
 
-
+    /**
+     * Aktualiesiert alles wenn sich was am slider aendert
+     *
+     * @param e a ChangeEvent object
+     */
     @Override
     public void stateChanged(ChangeEvent e) {
-        if (t1.isAlive()|| t2.isAlive())return;
-        int[] daten=randomize();
+        if (t1.isAlive() || t2.isAlive()) return;
+        int[] daten = randomize();
         panel1.setHeatmap(new int[randomize().length]);
         panel1.setDaten(daten.clone());
         panel1.pain();
