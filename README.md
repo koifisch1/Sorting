@@ -1,7 +1,7 @@
 https://github.com/koifisch1/Sorting
 
 # Sorting
-Visualisierung verschidener Sortieralgorithmen und Option des Vergleichens der Zeiten.
+Visualisierung verschiedener Sortieralgorithmen und Option des Vergleichens der Zeiten.
 Enthält folgende Algorithmen:\
 Mergesort (Rekursiv) n log(n)\
 Bubblesort n²\
